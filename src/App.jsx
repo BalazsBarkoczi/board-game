@@ -23,6 +23,10 @@ function App() {
     setBoard(updatedBoard);
   }
 
+  const resetGame = () => {
+    setBoard(Array(ROW_COUNT).fill(Array(COL_COUNT).fill('')));
+  }
+
 
   return (
     <>
@@ -42,6 +46,8 @@ function App() {
 
       </tbody>
     </table>
+
+    <button onClick={resetGame}>Reset</button>
 
     </>
   )
