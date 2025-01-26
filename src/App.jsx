@@ -9,6 +9,20 @@ function App() {
 
   const [board, setBoard] = useState(Array(ROW_COUNT).fill(Array(COL_COUNT).fill('')));
 
+  const handleCellClick = (row,col) =>{
+    console.log(row,col)
+
+    if(board[row][col] !== '') return;
+
+    const updatedBoard = board.map((boardRows,i)=>(
+        boardRows.map((cell, j)=>(
+          i === row && j == col ? 'X' : cell
+        ))
+    ));
+
+    setBoard(updatedBoard);
+  }
+
 
   return (
     <>
@@ -21,7 +35,7 @@ function App() {
         {board.map((row, rowIndex)=>(
           <tr key={rowIndex}>
             {row.map((cell,colIndex)=>(
-              <Cell key={`${rowIndex}-${colIndex}`} value={'X'} row={rowIndex} col={colIndex} color={'black'}  />
+              <Cell key={`${rowIndex}-${colIndex}`} value={cell} row={rowIndex} col={colIndex} color={'black'} handleCellClick={handleCellClick}  />
             ))}
           </tr>
         ))}

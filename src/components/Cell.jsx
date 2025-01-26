@@ -1,12 +1,13 @@
 import '../css/Cell.css';
 
-function Cell({value, row, col, color}){
+function Cell({value, row, col, color, handleCellClick}){
 
     return(
         <td
             className={color}
+            onClick={() => handleCellClick(row,col)}
         >
-            {value}:{row},{col}
+             {value}
 
         </td>
     );
