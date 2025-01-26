@@ -21,7 +21,7 @@ function App() {
         {board.map((row, rowIndex)=>(
           <tr key={rowIndex}>
             {row.map((cell,colIndex)=>(
-              <Cell key={`${rowIndex}-${colIndex}`} value={'X'} row={rowIndex} col={colIndex} color={'red'}  />
+              <Cell key={`${rowIndex}-${colIndex}`} value={'X'} row={rowIndex} col={colIndex} color={'black'}  />
             ))}
           </tr>
         ))}
