@@ -12,7 +12,7 @@ function App() {
 
   const [gameOver, setGameOver] = useState(false);
 
-  const characters = ['C','M','T'];
+  const characters = ['C','C','C']; // ['C','M','T']
   const [currentCharIndex, setCurrentCharIndex ] = useState(0);
 
   const handleCellClick = (row,col) =>{
@@ -82,12 +82,30 @@ function App() {
         j -= jDir;
       }
 
+      if(firstHalfCount + secondHalfCount + 1 >= MIN_LINE_LENGTH){
+        //color act
+        //board[row][col].color = "red";
+
+        //color last first half
+        //board[row + iDir * firstHalfCount][col + jDir * firstHalfCount].color = "red";
+
+        //color last second half
+        //board[row - iDir * secondHalfCount][col - jDir * secondHalfCount].color = "red";
+
+        for(let k = 0; k < firstHalfCount + secondHalfCount + 1; k++){
+          const startRowPos = row + iDir * firstHalfCount;
+          const startColPos = col + jDir * firstHalfCount;
+
+          board [startRowPos   + iDir * -k][startColPos   + jDir * -k].color = "red";
+        }
+
+      }
+
       console.log("First, Second",firstHalfCount, secondHalfCount)
     });
 
 
   }
-
 
 
 
