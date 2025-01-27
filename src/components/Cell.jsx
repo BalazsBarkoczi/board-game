@@ -7,7 +7,7 @@ function Cell({value, row, col, color, handleCellClick}){
             className={color}
             onClick={() => handleCellClick(row,col)}
         >
-             {value}
+             {value} 
 
         </td>
     );

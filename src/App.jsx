@@ -20,14 +20,14 @@ function App() {
 
     const updatedBoard = board.map((boardRows,i)=>(
         boardRows.map((cell, j)=>(
-          i === row && j == col ? {char: characters[currentCharIndex], color: "red"} : cell
+          i === row && j == col ? {char: characters[currentCharIndex], color: "black"} : cell
         ))
     ));
 
     setBoard(updatedBoard);
     setCurrentCharIndex((prev) => (prev + 1) % 3 );
 
-    //countLines(updatedBoard,row,col);
+    countLines(updatedBoard,row,col);
 
     if(!updatedBoard.flat().some((cell) => cell === null) ){
       setGameOver(true);
@@ -44,7 +44,7 @@ function App() {
   const countLines = (board, row, col) =>{
     console.log("CURR:",row,col);
 
-    const activeChar = board[row][col];
+    const activeChar = board[row][col].char;
     const lines = 0;
 
     const directions = [
@@ -54,18 +54,35 @@ function App() {
       [1,-1] //bottom left
     ];
 
-    let count = 0;
+    
 
-    directions.forEach( ([dirX,dirY]) => {
+    directions.forEach( ([iDir,jDir]) => {
 
-      let length = 0;
+
+      let firstHalfCount = 0;
+      let secondHalfCount = 0;
       
-      let x = dirX + row;
-      let y = dirY + col;
+      //first half
+      let i = row + iDir;
+      let j = col + jDir;
 
-      console.log(count,board[x][y])
+      while(i >= 0 && i < ROW_COUNT && j >= 0 && j < COL_COUNT && board[i][j]?.char === activeChar ){
+        firstHalfCount++;
+        i += iDir;
+        j += jDir;
+      }
 
-      count++;
+      //second half
+      i = row - iDir  ;
+      j = col - jDir  ;
+
+      while(i >= 0 && i < ROW_COUNT && j >= 0 && j < COL_COUNT && board[i][j]?.char === activeChar ){
+        secondHalfCount++;
+        i -= iDir;
+        j -= jDir;
+      }
+
+      console.log("First, Second",firstHalfCount, secondHalfCount)
     });
 
 
