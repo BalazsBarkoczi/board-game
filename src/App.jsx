@@ -8,7 +8,7 @@ function App() {
   const COL_COUNT = 5;
   const MIN_LINE_LENGTH = 3;
 
-  const [board, setBoard] = useState(Array(ROW_COUNT).fill(Array(COL_COUNT).fill('')));
+  const [board, setBoard] = useState(Array(ROW_COUNT).fill(Array(COL_COUNT).fill(null)));
 
   const [gameOver, setGameOver] = useState(false);
 
@@ -16,26 +16,27 @@ function App() {
   const [currentCharIndex, setCurrentCharIndex ] = useState(0);
 
   const handleCellClick = (row,col) =>{
-    if(board[row][col] !== '' || gameOver) return;
+    if(board[row][col] !== null || gameOver) return;
 
     const updatedBoard = board.map((boardRows,i)=>(
         boardRows.map((cell, j)=>(
-          i === row && j == col ? characters[currentCharIndex] : cell
+          i === row && j == col ? {char: characters[currentCharIndex], color: "red"} : cell
         ))
     ));
 
     setBoard(updatedBoard);
     setCurrentCharIndex((prev) => (prev + 1) % 3 );
 
-    countLines(updatedBoard,row,col);
+    //countLines(updatedBoard,row,col);
 
-    if(!updatedBoard.flat().some((cell) => cell === '') ){
+    if(!updatedBoard.flat().some((cell) => cell === null) ){
       setGameOver(true);
     }
+    console.log(updatedBoard)
   }
 
   const resetGame = () => {
-    setBoard(Array(ROW_COUNT).fill(Array(COL_COUNT).fill('')));
+    setBoard(Array(ROW_COUNT).fill(Array(COL_COUNT).fill(null)));
     setCurrentCharIndex(0);
     setGameOver(false);
   }
@@ -85,10 +86,10 @@ function App() {
           <tr key={rowIndex}>
             {row.map((cell,colIndex)=>(
               <Cell key={`${rowIndex}-${colIndex}`} 
-              value={cell} 
+              value={cell?.char} 
               row={rowIndex} 
               col={colIndex} 
-              color={'black'} 
+              color={cell?.color} 
               handleCellClick={handleCellClick}  
               />
             ))}
