@@ -9,13 +9,15 @@ function App() {
 
   const [board, setBoard] = useState(Array(ROW_COUNT).fill(Array(COL_COUNT).fill('')));
 
+  const [gameOver, setGameOver] = useState(false);
+
   const characters = ['C','M','T'];
   const [currentCharIndex, setCurrentCharIndex ] = useState(0);
 
   const handleCellClick = (row,col) =>{
     console.log(board)
 
-    if(board[row][col] !== '') return;
+    if(board[row][col] !== '' || gameOver) return;
 
     const updatedBoard = board.map((boardRows,i)=>(
         boardRows.map((cell, j)=>(
@@ -25,12 +27,19 @@ function App() {
 
     setBoard(updatedBoard);
     setCurrentCharIndex((prev) => (prev + 1) % 3 );
+
+    if(!updatedBoard.flat().some((cell) => cell === '') ){
+      setGameOver(true);
+    }
   }
 
   const resetGame = () => {
     setBoard(Array(ROW_COUNT).fill(Array(COL_COUNT).fill('')));
     setCurrentCharIndex(0);
+    setGameOver(false);
   }
+
+
 
 
   return (
@@ -57,6 +66,10 @@ function App() {
 
       </tbody>
     </table>
+
+    {gameOver &&(
+      <p>GAME OVER</p>
+    )}
 
         <p>Next: {characters[currentCharIndex]}</p>
 
