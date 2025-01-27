@@ -29,6 +29,7 @@ function App() {
 
   const resetGame = () => {
     setBoard(Array(ROW_COUNT).fill(Array(COL_COUNT).fill('')));
+    setCurrentCharIndex(0);
   }
 
 
@@ -56,6 +57,8 @@ function App() {
 
       </tbody>
     </table>
+
+        <p>Next: {characters[currentCharIndex]}</p>
 
     <button onClick={resetGame}>Reset</button>
 
