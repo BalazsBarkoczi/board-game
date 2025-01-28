@@ -15,6 +15,8 @@ function App() {
   const characters = ['C','C','C']; // ['C','M','T']
   const [currentCharIndex, setCurrentCharIndex ] = useState(0);
 
+  const [lines, setLines] = useState(0);
+
   const handleCellClick = (row,col) =>{
     if(board[row][col] !== null || gameOver) return;
 
@@ -32,20 +34,21 @@ function App() {
     if(!updatedBoard.flat().some((cell) => cell === null) ){
       setGameOver(true);
     }
-    console.log(updatedBoard)
+    //console.log(updatedBoard)
   }
 
   const resetGame = () => {
     setBoard(Array(ROW_COUNT).fill(Array(COL_COUNT).fill(null)));
     setCurrentCharIndex(0);
     setGameOver(false);
+    setLines(0);
   }
 
   const countLines = (board, row, col) =>{
     console.log("CURR:",row,col);
 
     const activeChar = board[row][col].char;
-    const lines = 0;
+    
 
     const directions = [
       [1,0], //down
@@ -82,6 +85,7 @@ function App() {
         j -= jDir;
       }
 
+      //color lines
       if(firstHalfCount + secondHalfCount + 1 >= MIN_LINE_LENGTH){
         //color act
         //board[row][col].color = "red";
@@ -101,13 +105,29 @@ function App() {
 
       }
 
-      console.log("First, Second",firstHalfCount, secondHalfCount)
+      console.log("First, Second",firstHalfCount, secondHalfCount);
+
+      const isFirstHalfAlmostLine = firstHalfCount === MIN_LINE_LENGTH - 1 && secondHalfCount < MIN_LINE_LENGTH - 1;
+      const isSecondHalfAlmostLine = secondHalfCount === MIN_LINE_LENGTH - 1 && firstHalfCount < MIN_LINE_LENGTH - 1;
+      const isExactLine = firstHalfCount + secondHalfCount + 1 === MIN_LINE_LENGTH;
+      
+      if (isFirstHalfAlmostLine) {
+        setLines((prev) => prev + 1);
+        console.log("Added point because first half is almost and second half is smaller");
+      } 
+      else if (isSecondHalfAlmostLine) {
+        setLines((prev) => prev + 1);
+        console.log("Added point because second half is almost and first half is smaller");
+      } 
+      else if (isExactLine) {
+        setLines((prev) => prev + 1);
+        console.log("Added point because its the exact amount");
+      }
+      
+
     });
 
-
   }
-
-
 
   return (
     <>
@@ -139,6 +159,7 @@ function App() {
     )}
 
         <p>Next: {characters[currentCharIndex]}</p>
+        <p>Lines: {lines}</p>
 
     <button onClick={resetGame}>Reset</button>
 
