@@ -1,3 +1,5 @@
+import '../css/Cell.css'
+
 function Cell({ value, row, col, color, handleCellClick, nextChar }) {
     return (
         <td
@@ -8,7 +10,7 @@ function Cell({ value, row, col, color, handleCellClick, nextChar }) {
 
                 {/*If the cell isn't empty show the value, if it's empty show to next charcter when hovered over the cell  */}
                 {value ? (
-                    <span className={`text-${color}-600 font-bold text-3xl`}>{value}</span>
+                    <span className={color + " font-bold text-3xl"}>{value}</span> /* "font-bold text-3xl" */
                 ) : (
                     nextChar && (
                         <span className="text-transparent group-hover:text-gray-400 font-bold text-lg">
