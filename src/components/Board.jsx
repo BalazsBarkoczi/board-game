@@ -137,20 +137,38 @@ function Board() {
             </table>
 
 
+            {/* Game Over Card */}
             {gameOver && (
-                <p>GAME OVER</p>
+                <div className="max-w-md mx-auto mt-6 p-6 bg-white rounded-lg shadow-lg border border-gray-200">
+                    <p className="text-2xl font-bold text-center">GAME OVER</p>
+                    <p className="mt-4 text-lg text-center">
+                        {lines > 0 ? 
+                            `Congratulations, you have ${lines} lines!` : "You have no lines, try again!"
+                        }
+
+                    </p>
+                    <div className="mt-6 text-center">
+                        <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                            onClick={resetGame}
+                        >
+                            Reset Game
+                        </button>
+                    </div>
+                </div>
             )}
 
-            <p>Next: {characters[currentCharIndex]}</p>
-            <p>Lines: {lines}</p>
+            {!gameOver && (
+                <div className='flex justify-center my-10'>
+                <button 
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                    onClick={resetGame}
+                    >
+                Reset
+                </button>
+                </div>
+            )}
 
-            <div className='flex justify-center'>
-            <button 
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                onClick={resetGame}
-                >
-            Reset</button>
-            </div>
         </>
     )
 }

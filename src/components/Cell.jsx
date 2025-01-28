@@ -6,7 +6,7 @@ function Cell({ value, row, col, color, handleCellClick, nextChar }) {
       >
         <div className="relative w-full h-full flex items-center justify-center">
           {value ? (
-            <span className={`text-${color}-600 font-bold text-lg`}>{value}</span>
+            <span className={`text-${color}-600 font-bold text-3xl`}>{value}</span>
           ) : (
             nextChar && (
               <span className="text-transparent group-hover:text-gray-400 font-bold text-lg">
