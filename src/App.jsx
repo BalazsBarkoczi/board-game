@@ -9,32 +9,30 @@ function App() {
   const MIN_LINE_LENGTH = 3;
 
   const [board, setBoard] = useState(Array(ROW_COUNT).fill(Array(COL_COUNT).fill(null)));
-
-  const [gameOver, setGameOver] = useState(false);
-
-  const characters = ['C','M','T']; // ['C','M','T']
-  const [currentCharIndex, setCurrentCharIndex ] = useState(0);
-
   const [lines, setLines] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0); // 0: C, 1: M, 2: T
 
-  const handleCellClick = (row,col) =>{
-    if(board[row][col] !== null || gameOver) return;
+  const characters = ['C', 'M', 'T'];
 
-    const updatedBoard = board.map((boardRows,i)=>(
-        boardRows.map((cell, j)=>(
-          i === row && j == col ? {char: characters[currentCharIndex], color: "black"} : cell
-        ))
+
+  const handleCellClick = (row, col) => {
+    if (board[row][col] !== null || gameOver) return;
+
+    const updatedBoard = board.map((boardRows, i) => (
+      boardRows.map((cell, j) => (
+        i === row && j == col ? { char: characters[currentCharIndex], color: "black" } : cell
+      ))
     ));
 
     setBoard(updatedBoard);
-    setCurrentCharIndex((prev) => (prev + 1) % 3 );
+    setCurrentCharIndex((prev) => (prev + 1) % characters.length);
 
-    countLines(updatedBoard,row,col);
+    countLines(updatedBoard, row, col);
 
-    if(!updatedBoard.flat().some((cell) => cell === null) ){
+    if (!updatedBoard.flat().some((cell) => cell === null)) {
       setGameOver(true);
     }
-    //console.log(updatedBoard)
   }
 
   const resetGame = () => {
@@ -44,131 +42,112 @@ function App() {
     setLines(0);
   }
 
-  const countLines = (board, row, col) =>{
-    console.log("CURR:",row,col);
-
+  const countLines = (board, row, col) => {
     const activeChar = board[row][col].char;
-    
 
     const directions = [
-      [1,0], //down
-      [0,1], //right
-      [1,1], //bottom right
-      [1,-1] //bottom left
+      [1, 0], //down
+      [0, 1], //right
+      [1, 1], //bottom right
+      [1, -1] //bottom left
     ];
 
-    
 
-    directions.forEach( ([iDir,jDir]) => {
+    directions.forEach(([iDir, jDir]) => {
 
-
-      let firstHalfCount = 0;
-      let secondHalfCount = 0;
-      
-      //first half
-      let i = row + iDir;
-      let j = col + jDir;
-
-      while(i >= 0 && i < ROW_COUNT && j >= 0 && j < COL_COUNT && board[i][j]?.char === activeChar ){
-        firstHalfCount++;
-        i += iDir;
-        j += jDir;
-      }
-
-      //second half
-      i = row - iDir  ;
-      j = col - jDir  ;
-
-      while(i >= 0 && i < ROW_COUNT && j >= 0 && j < COL_COUNT && board[i][j]?.char === activeChar ){
-        secondHalfCount++;
-        i -= iDir;
-        j -= jDir;
-      }
+      let firstHalfCount = countConsecutive(board, row, col, iDir, jDir, activeChar);
+      let secondHalfCount = countConsecutive(board, row, col, -iDir, -jDir, activeChar);
 
       //color lines
-      if(firstHalfCount + secondHalfCount + 1 >= MIN_LINE_LENGTH){
-        //color act
-        //board[row][col].color = "red";
-
-        //color last first half
-        //board[row + iDir * firstHalfCount][col + jDir * firstHalfCount].color = "red";
-
-        //color last second half
-        //board[row - iDir * secondHalfCount][col - jDir * secondHalfCount].color = "red";
-
-        const color = {
-          "C" : "green",
-          "M" : "blue",
-          "T" : "red"
-
-        }
-
-        for(let k = 0; k < firstHalfCount + secondHalfCount + 1; k++){
-          const startRowPos = row + iDir * firstHalfCount;
-          const startColPos = col + jDir * firstHalfCount;
-
-          board [startRowPos   + iDir * -k][startColPos   + jDir * -k].color = color[activeChar];
-        }
-
+      if (firstHalfCount + secondHalfCount + 1 >= MIN_LINE_LENGTH) {
+        colorLines(board, row, col, iDir, jDir, firstHalfCount, secondHalfCount, activeChar);
       }
-
-      console.log("First, Second",firstHalfCount, secondHalfCount);
 
       const isFirstHalfAlmostLine = firstHalfCount === MIN_LINE_LENGTH - 1 && secondHalfCount <= MIN_LINE_LENGTH - 1;
       const isSecondHalfAlmostLine = secondHalfCount === MIN_LINE_LENGTH - 1 && firstHalfCount <= MIN_LINE_LENGTH - 1;
       const isExactLine = firstHalfCount + secondHalfCount + 1 === MIN_LINE_LENGTH;
-      
+
       if (isFirstHalfAlmostLine) {
         setLines((prev) => prev + 1);
-        console.log("Added point because first half is almost and second half is smaller");
-      } 
+      }
       else if (isSecondHalfAlmostLine) {
         setLines((prev) => prev + 1);
-        console.log("Added point because second half is almost and first half is smaller");
-      } 
+      }
       else if (isExactLine) {
         setLines((prev) => prev + 1);
-        console.log("Added point because its the exact amount");
       }
-      
-
     });
 
+  }
+
+  const countConsecutive = (board, row, col, iDir, jDir, activeChar) => {
+    let count = 0;
+
+    let i = row + iDir;
+    let j = col + jDir;
+
+    while (i >= 0 && i < ROW_COUNT && j >= 0 && j < COL_COUNT && board[i][j]?.char === activeChar) {
+      count++;
+      i += iDir;
+      j += jDir;
+    }
+
+    return count;
+  }
+
+  const colorLines = (board, row, col, iDir, jDir, firstHalfCount, secondHalfCount, activeChar) => {
+    const color = {
+      "C": "green",
+      "M": "blue",
+      "T": "red"
+
+    }
+
+    const updatedBoard = JSON.parse(JSON.stringify(board)); //deep copy
+
+    for (let k = 0; k < firstHalfCount + secondHalfCount + 1; k++) {
+      const startRowPos = row + iDir * firstHalfCount;
+      const startColPos = col + jDir * firstHalfCount;
+
+      updatedBoard[startRowPos + iDir * -k][startColPos + jDir * -k].color = color[activeChar];
+    }
+
+    setBoard(updatedBoard);
   }
 
   return (
     <>
 
-    <h1>CMT BOARD GAME</h1>
+      <h1>CMT BOARD GAME</h1>
 
-    <table className='main-board'>
-      <tbody>
+      <table className='main-board'>
+        <tbody>
 
-        {board.map((row, rowIndex)=>(
-          <tr key={rowIndex}>
-            {row.map((cell,colIndex)=>(
-              <Cell key={`${rowIndex}-${colIndex}`} 
-              value={cell?.char} 
-              row={rowIndex} 
-              col={colIndex} 
-              color={cell?.color} 
-              handleCellClick={handleCellClick}  
-              />
-            ))}
-          </tr>
-        ))}
+          {board.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {row.map((cell, colIndex) => (
+                <Cell key={`${rowIndex}-${colIndex}`}
+                  value={cell?.char}
+                  row={rowIndex}
+                  col={colIndex}
+                  color={cell?.color}
+                  handleCellClick={handleCellClick}
+                />
+              ))}
+            </tr>
+          ))}
 
-      </tbody>
-    </table>
+        </tbody>
+      </table>
 
-    {gameOver &&(
-      <p>GAME OVER</p>
-    )}
+      {gameOver && (
+        <p>GAME OVER</p>
+      )}
 
-        <p>Next: {characters[currentCharIndex]}</p>
-        <p>Lines: {lines}</p>
+      <p>Next: {characters[currentCharIndex]}</p>
+      <p>Lines: {lines}</p>
 
-    <button onClick={resetGame}>Reset</button>
+      <button onClick={resetGame}>Reset</button>
 
     </>
   )
