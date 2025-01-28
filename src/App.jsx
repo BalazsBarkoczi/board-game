@@ -148,7 +148,6 @@ function App() {
       <p>Lines: {lines}</p>
 
       <button onClick={resetGame}>Reset</button>
-
     </>
   )
 }
