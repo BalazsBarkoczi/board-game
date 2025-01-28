@@ -12,7 +12,7 @@ function App() {
 
   const [gameOver, setGameOver] = useState(false);
 
-  const characters = ['C','C','C']; // ['C','M','T']
+  const characters = ['C','M','T']; // ['C','M','T']
   const [currentCharIndex, setCurrentCharIndex ] = useState(0);
 
   const [lines, setLines] = useState(0);
@@ -96,19 +96,26 @@ function App() {
         //color last second half
         //board[row - iDir * secondHalfCount][col - jDir * secondHalfCount].color = "red";
 
+        const color = {
+          "C" : "green",
+          "M" : "blue",
+          "T" : "red"
+
+        }
+
         for(let k = 0; k < firstHalfCount + secondHalfCount + 1; k++){
           const startRowPos = row + iDir * firstHalfCount;
           const startColPos = col + jDir * firstHalfCount;
 
-          board [startRowPos   + iDir * -k][startColPos   + jDir * -k].color = "red";
+          board [startRowPos   + iDir * -k][startColPos   + jDir * -k].color = color[activeChar];
         }
 
       }
 
       console.log("First, Second",firstHalfCount, secondHalfCount);
 
-      const isFirstHalfAlmostLine = firstHalfCount === MIN_LINE_LENGTH - 1 && secondHalfCount < MIN_LINE_LENGTH - 1;
-      const isSecondHalfAlmostLine = secondHalfCount === MIN_LINE_LENGTH - 1 && firstHalfCount < MIN_LINE_LENGTH - 1;
+      const isFirstHalfAlmostLine = firstHalfCount === MIN_LINE_LENGTH - 1 && secondHalfCount <= MIN_LINE_LENGTH - 1;
+      const isSecondHalfAlmostLine = secondHalfCount === MIN_LINE_LENGTH - 1 && firstHalfCount <= MIN_LINE_LENGTH - 1;
       const isExactLine = firstHalfCount + secondHalfCount + 1 === MIN_LINE_LENGTH;
       
       if (isFirstHalfAlmostLine) {
