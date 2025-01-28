@@ -128,6 +128,7 @@ function Board() {
                                     col={colIndex}
                                     color={cell?.color}
                                     handleCellClick={handleCellClick}
+                                    nextChar={board[rowIndex][colIndex] === null ? characters[currentCharIndex] : null}
                                 />
                             ))}
                         </tr>
