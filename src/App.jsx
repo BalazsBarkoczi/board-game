@@ -1,6 +1,3 @@
-import { useState } from 'react'
-import './css/App.css'
-import Cell from './components/Cell';
 import Board from './components/Board';
 
 function App() {
